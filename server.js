@@ -6,9 +6,20 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+const cors = require('cors');
+app.use(cors())
+
 const { exec } = require('child_process');
 
-// File conversion to MP4 using FFMPEG
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
 const convertToMp4 = (inputPath, outputPath) => {
   const command = `ffmpeg -i ${inputPath} -c:v libx264 -crf 23 -preset fast -c:a aac -b:a 128k -movflags +faststart ${outputPath}`;
 
@@ -21,22 +32,10 @@ const convertToMp4 = (inputPath, outputPath) => {
   });
 };
 
-// Set up storage for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-
 const upload = multer({ storage: storage });
 
-// Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Endpoint for file uploads
 app.post('/upload', upload.single('file'), (req, res) => {
   const inputPath = req.file.path;
   const outputPath = `uploads/${path.parse(req.file.originalname).name}.mp4`;
@@ -49,3 +48,4 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
