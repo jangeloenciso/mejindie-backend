@@ -11,6 +11,24 @@ app.use(cors())
 
 const { exec } = require('child_process');
 
+const mysql = require('mysql');
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  port: 3306,
+  database: 'test',
+  user: 'root',
+  password: 'admin' 
+});
+
+connection.connect(function(err) {
+  if (err) {
+      console.log("error occurred while connecting", err.stack);
+  } else {
+      console.log("connection created with mysql successfully");
+  }
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads');
