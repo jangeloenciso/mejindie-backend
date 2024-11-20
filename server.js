@@ -3,9 +3,11 @@ const path = require('path');
 const cors = require('cors');
 const sequelize = require('./db');
 const uploadRoutes = require('./routes/uploadRoutes'); // Import the routes
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 // Middleware
 app.use(cors());
