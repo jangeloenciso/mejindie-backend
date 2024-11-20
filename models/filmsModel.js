@@ -30,7 +30,7 @@ const FilmModel = sequelize.define('films', {
     },
     inviteLink: {
         type: DataTypes.STRING, // Unique invite link for accessing the film
-        allowNull: false, // Invite link cannot be null
+        allowNull: true, // Invite link cannot be null
         unique: true, // Each film should have a unique invite link
     },
 }, {
