@@ -15,6 +15,15 @@ app.use(express.urlencoded({ extended: true })); // For parsing form data
 // Use the routes from routes.js
 app.use('/api', uploadRoutes);
 
+// Sync the models with the database
+sequelize.sync({ force: false }) // Set to `true` to drop tables on sync (use cautiously)
+    .then(() => {
+        console.log('Database synced successfully!');
+    })
+    .catch((error) => {
+        console.error('Error syncing database:', error);
+    });
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
